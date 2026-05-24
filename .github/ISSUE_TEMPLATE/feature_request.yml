@@ -1,0 +1,43 @@
+name: Feature request
+description: Propose a new public API, configuration knob, or developer-experience improvement.
+title: "[feat]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        SDK changes are scoped to client behavior — request shaping,
+        response parsing, error mapping, retry/streaming/auth ergonomics.
+        Gateway-side features (new policy types, compliance frameworks,
+        PHI detectors) belong in the ClarisMD product backlog, not here.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the developer experience pain point. Code is helpful.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: Sketch the public surface. Examples preferred over prose.
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds, related SDK precedents (OpenAI, Anthropic, Stripe), or earlier proposals.
+
+  - type: checkboxes
+    id: parity
+    attributes:
+      label: Cross-SDK parity
+      description: ClarisMD ships parallel SDKs in Python and TypeScript. Substantive surface changes should be available in both.
+      options:
+        - label: I've thought about how this should look in `clarismd-python` (or it's TS-specific)

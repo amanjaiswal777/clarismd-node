@@ -1,7 +1,18 @@
-# `@clarismd/sdk`
+<p align="center">
+  <img src="./assets/logo.svg" alt="ClarisMD" width="120" height="120"/>
+</p>
 
-[![npm](https://img.shields.io/npm/v/@clarismd/sdk.svg)](https://www.npmjs.com/package/@clarismd/sdk)
-[![Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+<h1 align="center"><code>@clarismd/sdk</code></h1>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@clarismd/sdk"><img alt="npm" src="https://img.shields.io/npm/v/@clarismd/sdk.svg"/></a>
+  <a href="https://www.npmjs.com/package/@clarismd/sdk"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@clarismd/sdk.svg"/></a>
+  <a href="https://github.com/clarismd/clarismd-node/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/clarismd/clarismd-node/actions/workflows/ci.yml/badge.svg"/></a>
+  <a href="https://bundlephobia.com/package/@clarismd/sdk"><img alt="Bundle size" src="https://img.shields.io/bundlephobia/minzip/@clarismd/sdk.svg?label=gzip"/></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/npm/l/@clarismd/sdk.svg"/></a>
+  <a href="https://nodejs.org"><img alt="Node" src="https://img.shields.io/node/v/@clarismd/sdk.svg"/></a>
+  <a href="https://www.typescriptlang.org/"><img alt="Types" src="https://img.shields.io/npm/types/@clarismd/sdk.svg"/></a>
+</p>
 
 Official TypeScript SDK for the **ClarisMD** healthcare AI gateway —
 PHI scanning, policy enforcement, audit logs, and OpenAI-shaped chat /
@@ -23,12 +34,44 @@ embeddings, exposed through a single client.
 
 ## Install
 
+From npm (recommended):
+
 ```bash
 npm install @clarismd/sdk
-# pnpm add @clarismd/sdk
-# yarn add @clarismd/sdk
-# bun add @clarismd/sdk
+pnpm add @clarismd/sdk
+yarn add @clarismd/sdk
+bun add @clarismd/sdk
 ```
+
+From the public GitHub repo (latest `main`, or pin to a tag/commit):
+
+```bash
+npm install github:clarismd/clarismd-node
+npm install github:clarismd/clarismd-node#v0.1.0
+npm install git+https://github.com/clarismd/clarismd-node.git#<commit-sha>
+```
+
+In a `package.json`:
+
+```jsonc
+{
+  "dependencies": {
+    "@clarismd/sdk": "github:clarismd/clarismd-node#v0.1.0"
+  }
+}
+```
+
+For local development:
+
+```bash
+git clone https://github.com/clarismd/clarismd-node.git
+cd clarismd-node
+npm install
+npm run build && npm test
+```
+
+Requires **Node.js 18+**. Also runs unmodified on modern browsers,
+Cloudflare Workers, Deno, and Bun.
 
 ## Quickstart
 
@@ -67,6 +110,13 @@ const client = new ClarisMD({
 
 `baseURL` also resolves from `CLARISMD_BASE_URL` if you'd rather keep it
 out of code.
+
+Verify the gateway is reachable (no API key required server-side):
+
+```ts
+const status = await client.health.check();
+console.log(status.status, status.version); // "ok" "0.4.2"
+```
 
 ## Streaming
 
@@ -193,6 +243,28 @@ disabled.
 The SDK targets ES2020 + the standard `fetch` / `Response` /
 `ReadableStream` / `crypto.randomUUID` APIs available in Workers. See
 `examples/cloudflare-worker.ts` for an end-to-end fetch handler.
+
+## Examples
+
+Runnable scripts live in [`examples/`](./examples):
+
+- [`quickstart.ts`](./examples/quickstart.ts) — basic chat completion
+- [`streaming.ts`](./examples/streaming.ts) — server-sent-events streaming
+- [`phi-scan.ts`](./examples/phi-scan.ts) — PHI entity detection
+- [`audit-export.ts`](./examples/audit-export.ts) — pull a signed evidence bundle
+- [`compliance-score.ts`](./examples/compliance-score.ts) — auto vs. manual breakdown
+- [`cloudflare-worker.ts`](./examples/cloudflare-worker.ts) — end-to-end Workers fetch handler
+
+## Contributing
+
+Issues and PRs welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for
+the dev setup and PR conventions, and [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
+for community expectations.
+
+## Security
+
+Found a vulnerability? Please report it privately per
+[`SECURITY.md`](./SECURITY.md) — do not open a public issue.
 
 ## License
 
