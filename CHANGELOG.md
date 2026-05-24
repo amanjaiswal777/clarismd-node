@@ -34,3 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AbortSignal` cancellation supported on every request.
 - TypeScript strict-mode clean; ships `.d.ts` declarations.
 - Worker-compat smoke test under `@cloudflare/vitest-pool-workers`.
+
+[Unreleased]: https://github.com/amanjaiswal777/clarismd-node/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/amanjaiswal777/clarismd-node/releases/tag/v0.1.0

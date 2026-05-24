@@ -16,7 +16,7 @@ the repo.
 
 2. **Configure trusted publishing** at
    <https://www.npmjs.com/package/@clarismd/sdk/access>:
-   - GitHub repository: `clarismd/clarismd-node`
+   - GitHub repository: `amanjaiswal777/clarismd-node`
    - Workflow filename: `publish.yml`
    - Environment: `release`
    No `NPM_TOKEN` is created or stored.
@@ -58,7 +58,7 @@ the repo.
    node -e "const { ClarisMD, VERSION } = require('@clarismd/sdk'); console.log(VERSION)"
    ```
 8. **Create the GitHub Release** at
-   <https://github.com/clarismd/clarismd-node/releases/new?tag=vX.Y.Z>
+   <https://github.com/amanjaiswal777/clarismd-node/releases/new?tag=vX.Y.Z>
    with the changelog excerpt as the body.
 
 ## Pre-releases
@@ -90,7 +90,7 @@ deprecate forward instead and ship a fixed `X.Y.(Z+1)`.
 ## v0.1.0 launch checklist
 
 - [ ] `@clarismd` scope reserved on npm
-- [ ] `clarismd/clarismd-node` repo public on GitHub
+- [ ] `amanjaiswal777/clarismd-node` repo public on GitHub
 - [ ] Trusted publisher configured (workflow `publish.yml`, env `release`)
 - [ ] CI green on `main`
 - [ ] `CHANGELOG.md` has a `## [0.1.0] - YYYY-MM-DD` heading

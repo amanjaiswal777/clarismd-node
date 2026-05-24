@@ -28,7 +28,7 @@ coordinate a fix and disclosure.
 Prereqs: **Node.js 18+**, npm 10+ (or pnpm/yarn).
 
 ```bash
-git clone https://github.com/clarismd/clarismd-node.git
+git clone https://github.com/amanjaiswal777/clarismd-node.git
 cd clarismd-node
 npm install
 ```

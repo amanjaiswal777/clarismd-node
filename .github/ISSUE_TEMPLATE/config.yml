@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/clarismd/clarismd-node/security/policy
+    url: https://github.com/amanjaiswal777/clarismd-node/security/policy
     about: Please report security issues privately per SECURITY.md — do not open a public issue.
   - name: ClarisMD product / gateway questions
     url: https://clarismd.com/contact
     about: For questions about the ClarisMD service itself, contracts, or compliance scope.
   - name: GitHub Discussions
-    url: https://github.com/clarismd/clarismd-node/discussions
+    url: https://github.com/amanjaiswal777/clarismd-node/discussions
     about: General questions, design discussion, or "how do I…" — start a discussion.

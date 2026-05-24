@@ -7,14 +7,15 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@clarismd/sdk"><img alt="npm" src="https://img.shields.io/npm/v/@clarismd/sdk.svg"/></a>
   <a href="https://www.npmjs.com/package/@clarismd/sdk"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@clarismd/sdk.svg"/></a>
-  <a href="https://github.com/clarismd/clarismd-node/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/clarismd/clarismd-node/actions/workflows/ci.yml/badge.svg"/></a>
+  <a href="https://github.com/amanjaiswal777/clarismd-node/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/amanjaiswal777/clarismd-node/actions/workflows/ci.yml/badge.svg"/></a>
   <a href="https://bundlephobia.com/package/@clarismd/sdk"><img alt="Bundle size" src="https://img.shields.io/bundlephobia/minzip/@clarismd/sdk.svg?label=gzip"/></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/npm/l/@clarismd/sdk.svg"/></a>
   <a href="https://nodejs.org"><img alt="Node" src="https://img.shields.io/node/v/@clarismd/sdk.svg"/></a>
   <a href="https://www.typescriptlang.org/"><img alt="Types" src="https://img.shields.io/npm/types/@clarismd/sdk.svg"/></a>
 </p>
 
-Official TypeScript SDK for the **ClarisMD** healthcare AI gateway —
+Official TypeScript SDK for the [ClarisMD](https://clarismd.com) governed-AI
+gateway for healthcare —
 PHI scanning, policy enforcement, audit logs, and OpenAI-shaped chat /
 embeddings, exposed through a single client.
 
@@ -46,9 +47,9 @@ bun add @clarismd/sdk
 From the public GitHub repo (latest `main`, or pin to a tag/commit):
 
 ```bash
-npm install github:clarismd/clarismd-node
-npm install github:clarismd/clarismd-node#v0.1.0
-npm install git+https://github.com/clarismd/clarismd-node.git#<commit-sha>
+npm install github:amanjaiswal777/clarismd-node
+npm install github:amanjaiswal777/clarismd-node#v0.1.0
+npm install git+https://github.com/amanjaiswal777/clarismd-node.git#<commit-sha>
 ```
 
 In a `package.json`:
@@ -56,7 +57,7 @@ In a `package.json`:
 ```jsonc
 {
   "dependencies": {
-    "@clarismd/sdk": "github:clarismd/clarismd-node#v0.1.0"
+    "@clarismd/sdk": "github:amanjaiswal777/clarismd-node#v0.1.0"
   }
 }
 ```
@@ -64,7 +65,7 @@ In a `package.json`:
 For local development:
 
 ```bash
-git clone https://github.com/clarismd/clarismd-node.git
+git clone https://github.com/amanjaiswal777/clarismd-node.git
 cd clarismd-node
 npm install
 npm run build && npm test
