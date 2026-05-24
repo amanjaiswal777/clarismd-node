@@ -1,0 +1,75 @@
+{
+  "name": "@clarismd/sdk",
+  "version": "0.1.0",
+  "description": "Open-source AI gateway with PHI-aware governance — TypeScript client",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:workers": "vitest run --config vitest.workerd.config.ts",
+    "lint": "eslint src tests",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "codegen": "bash scripts/codegen.sh",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "clarismd",
+    "llm",
+    "openai",
+    "healthcare",
+    "phi",
+    "audit",
+    "ai-gateway",
+    "fetch",
+    "isomorphic"
+  ],
+  "homepage": "https://clarismd.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clarismd/clarismd-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/clarismd/clarismd-typescript/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.0.0",
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^2.1.0",
+    "eslint": "^9.0.0",
+    "openapi-typescript": "^7.0.0",
+    "size-limit": "^11.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

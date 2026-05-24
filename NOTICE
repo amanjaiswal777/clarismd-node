@@ -1,0 +1,37 @@
+ClarisMD TypeScript SDK
+Copyright 2026 ClarisMD contributors
+
+This product includes software developed by the ClarisMD project
+(https://clarismd.com).
+
+Licensed under the Apache License, Version 2.0 (the "Apache License").
+You may not use this software except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+The ClarisMD platform itself (server, frontend, infrastructure) is
+licensed separately under the GNU Affero General Public License v3.0.
+This TypeScript SDK is intentionally Apache-2.0 so that downstream
+users can integrate it into both open-source and proprietary
+applications without triggering the AGPL's network-use clause.
+
+This software is NOT a HIPAA Business Associate. The ClarisMD platform
+provides healthcare-aware tooling (PHI scrubbing, audit logging,
+compliance reporting) but does NOT make HIPAA-compliance claims about
+itself, ship a BAA, or constitute medical, legal, or compliance
+advice. Operators must obtain their own legal review before
+processing real Protected Health Information.
+
+----------------------------------------------------------------------
+Runtime dependencies: NONE.
+
+The SDK uses only the platform's native `fetch`, `ReadableStream`,
+`TextDecoder`, and `crypto.randomUUID` — every supported runtime
+(Node 18+, modern browsers, Cloudflare Workers, Deno, Bun) provides
+these on the global scope.
+
+Development-only dependencies (TypeScript, tsup, vitest, ESLint,
+typescript-eslint, openapi-typescript, size-limit, @types/node) ship
+under their respective open-source licenses; see each project's
+distribution for the exact terms.
