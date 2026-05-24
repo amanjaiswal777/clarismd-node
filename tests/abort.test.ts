@@ -26,7 +26,11 @@ describe("AbortSignal handling", () => {
     const controller = new AbortController();
     controller.abort(new DOMException("user cancelled", "AbortError"));
     await expect(
-      client.request({ method: "GET", path: "/x", options: { signal: controller.signal } }),
+      client.request({
+        method: "GET",
+        path: "/x",
+        options: { signal: controller.signal },
+      }),
     ).rejects.toBeInstanceOf(APIConnectionError);
     expect(calls).toBe(1);
   });

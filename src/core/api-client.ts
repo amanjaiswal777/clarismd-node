@@ -149,9 +149,11 @@ function combineSignals(signals: AbortSignal[]): AbortSignal {
   if (filtered.length === 0) return new AbortController().signal;
   if (filtered.length === 1) return filtered[0]!;
 
-  const abortAny = (AbortSignal as typeof AbortSignal & {
-    any?: (signals: AbortSignal[]) => AbortSignal;
-  }).any;
+  const abortAny = (
+    AbortSignal as typeof AbortSignal & {
+      any?: (signals: AbortSignal[]) => AbortSignal;
+    }
+  ).any;
   if (typeof abortAny === "function") {
     return abortAny.call(AbortSignal, filtered);
   }
@@ -210,8 +212,7 @@ export class APIClient {
     this.defaultHeaders = { ...(options.defaultHeaders ?? {}) };
 
     const fetchRef =
-      options.fetch ??
-      (globalThis as { fetch?: FetchLike }).fetch;
+      options.fetch ?? (globalThis as { fetch?: FetchLike }).fetch;
     if (!fetchRef) {
       throw new ClarisMDError(
         "ClarisMD: no `fetch` available in this runtime. Pass `fetch` explicitly.",
@@ -219,8 +220,7 @@ export class APIClient {
     }
     // Bind to globalThis when using the ambient fetch — some runtimes
     // (older Node, certain bundlers) require it.
-    this.fetchImpl =
-      options.fetch ?? ((input, init) => fetchRef(input, init));
+    this.fetchImpl = options.fetch ?? ((input, init) => fetchRef(input, init));
     this.sleep = options.sleep ?? defaultSleep;
     this.random = options.random ?? Math.random;
   }

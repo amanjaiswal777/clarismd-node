@@ -12,8 +12,9 @@ describe("ClarisMD constructor", () => {
 
   it("throws when no API key is available", () => {
     vi.stubEnv("CLARISMD_API_KEY", "");
-    expect(() => new ClarisMD({ fetch: (async () => new Response()) as never }))
-      .toThrow(ClarisMDError);
+    expect(
+      () => new ClarisMD({ fetch: (async () => new Response()) as never }),
+    ).toThrow(ClarisMDError);
   });
 
   it("reads CLARISMD_API_KEY from the environment", async () => {

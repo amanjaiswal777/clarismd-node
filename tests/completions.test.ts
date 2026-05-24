@@ -25,8 +25,6 @@ describe("completions resource", () => {
     expect(result.choices[0]!.text).toBe("Hello");
     const sent = JSON.parse(m.requests[0]!.body!);
     expect(sent.prompt).toBe("Say hi");
-    expect(m.requests[0]!.url).toBe(
-      "https://api.test.local/v1/completions",
-    );
+    expect(m.requests[0]!.url).toBe("https://api.test.local/v1/completions");
   });
 });

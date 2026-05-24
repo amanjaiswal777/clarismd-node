@@ -27,6 +27,8 @@
     "test:coverage": "vitest run --coverage",
     "test:workers": "vitest run --config vitest.workerd.config.ts",
     "lint": "eslint src tests",
+    "format": "prettier --write src tests examples",
+    "format:check": "prettier --check src tests examples",
     "typecheck": "tsc --noEmit",
     "size": "size-limit",
     "codegen": "bash scripts/codegen.sh",
@@ -43,13 +45,13 @@
     "fetch",
     "isomorphic"
   ],
-  "homepage": "https://clarismd.com",
+  "homepage": "https://github.com/clarismd/clarismd-node#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/clarismd/clarismd-typescript.git"
+    "url": "git+https://github.com/clarismd/clarismd-node.git"
   },
   "bugs": {
-    "url": "https://github.com/clarismd/clarismd-typescript/issues"
+    "url": "https://github.com/clarismd/clarismd-node/issues"
   },
   "dependencies": {},
   "devDependencies": {
@@ -58,6 +60,7 @@
     "@vitest/coverage-v8": "^2.1.0",
     "eslint": "^9.0.0",
     "openapi-typescript": "^7.0.0",
+    "prettier": "^3.3.0",
     "size-limit": "^11.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.5.0",

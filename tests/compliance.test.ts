@@ -43,7 +43,11 @@ describe("compliance resource", () => {
 
   it("requirements tolerates a bare array response", async () => {
     const m = mockFetch([
-      { body: [{ id: "r_2", framework: "hipaa", acknowledgment_status: "pending" }] },
+      {
+        body: [
+          { id: "r_2", framework: "hipaa", acknowledgment_status: "pending" },
+        ],
+      },
     ]);
     const client = makeClient(m.fetch);
     const reqs = await client.compliance.requirements();
@@ -52,9 +56,7 @@ describe("compliance resource", () => {
   });
 
   it("evidence returns artifact array", async () => {
-    const m = mockFetch([
-      { body: { data: [{ id: "ev_1" }] } },
-    ]);
+    const m = mockFetch([{ body: { data: [{ id: "ev_1" }] } }]);
     const client = makeClient(m.fetch);
     const ev = await client.compliance.evidence("r_1");
     expect(ev).toHaveLength(1);

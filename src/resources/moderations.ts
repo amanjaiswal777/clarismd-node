@@ -1,10 +1,7 @@
 // Copyright (c) 2026 ClarisMD contributors.
 // SPDX-License-Identifier: Apache-2.0
 
-import type {
-  ModerationCreateParams,
-  ModerationResponse,
-} from "../types.js";
+import type { ModerationCreateParams, ModerationResponse } from "../types.js";
 import { Resource, compact, toRequestOptions } from "./_base.js";
 import type { ResourceRequestOptions } from "./_base.js";
 

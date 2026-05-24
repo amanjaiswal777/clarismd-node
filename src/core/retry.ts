@@ -24,7 +24,9 @@ export function isRetryableStatus(status: number): boolean {
  * an HTTP-date per RFC 7231. Returns milliseconds, or `null` when the
  * header is missing or unparseable.
  */
-export function parseRetryAfter(header: string | null | undefined): number | null {
+export function parseRetryAfter(
+  header: string | null | undefined,
+): number | null {
   if (!header) return null;
   const trimmed = header.trim();
   if (trimmed === "") return null;
@@ -58,7 +60,8 @@ export function retryDelayMs(
   const base =
     retryAfterMs !== null
       ? Math.min(retryAfterMs, RETRY_AFTER_CAP_MS)
-      : (RETRY_BACKOFF_MS[Math.min(attempt, RETRY_BACKOFF_MS.length - 1)] ?? 2000);
+      : (RETRY_BACKOFF_MS[Math.min(attempt, RETRY_BACKOFF_MS.length - 1)] ??
+        2000);
   const jitter = (randomFn() * 0.5 - 0.25) * base; // ±25%
   return Math.max(0, Math.round(base + jitter));
 }

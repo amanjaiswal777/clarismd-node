@@ -38,7 +38,12 @@ export function mockFetch(
   const requests: CapturedRequest[] = [];
   let i = 0;
   const fetch: FetchLike = async (input, init) => {
-    const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
+    const url =
+      typeof input === "string"
+        ? input
+        : input instanceof URL
+          ? input.toString()
+          : input.url;
     const method = (init?.method ?? "GET").toUpperCase();
     const headers: Record<string, string> = {};
     const headerSource = new Headers(init?.headers);
@@ -46,7 +51,11 @@ export function mockFetch(
       headers[key] = value;
     });
     const body =
-      typeof init?.body === "string" ? init.body : init?.body === undefined ? null : String(init.body);
+      typeof init?.body === "string"
+        ? init.body
+        : init?.body === undefined
+          ? null
+          : String(init.body);
     const captured: CapturedRequest = {
       url,
       method,
@@ -59,7 +68,7 @@ export function mockFetch(
     const spec =
       typeof specs === "function"
         ? specs(captured)
-        : specs[i] ?? specs[specs.length - 1] ?? { status: 200, body: {} };
+        : (specs[i] ?? specs[specs.length - 1] ?? { status: 200, body: {} });
     i += 1;
 
     const status = spec.status ?? 200;
@@ -77,7 +86,8 @@ export function mockFetch(
     }
     // Status codes 204/205/304 forbid a body per the HTTP spec, and
     // `new Response("", { status: 204 })` throws in some runtimes.
-    const responseBody = status === 204 || status === 205 || status === 304 ? null : text;
+    const responseBody =
+      status === 204 || status === 205 || status === 304 ? null : text;
     return new Response(responseBody, { status, headers: responseHeaders });
   };
 

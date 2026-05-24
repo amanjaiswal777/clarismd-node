@@ -18,9 +18,7 @@ describe("moderations resource", () => {
     const client = makeClient(m.fetch);
     const result = await client.moderations.create({ input: "hi" });
     expect(result.results[0]!.flagged).toBe(false);
-    expect(m.requests[0]!.url).toBe(
-      "https://api.test.local/v1/moderations",
-    );
+    expect(m.requests[0]!.url).toBe("https://api.test.local/v1/moderations");
     const sent = JSON.parse(m.requests[0]!.body!);
     expect(sent.input).toBe("hi");
   });

@@ -295,13 +295,11 @@ export interface ChatCompletionCreateParamsBase {
   [key: string]: unknown;
 }
 
-export interface ChatCompletionCreateParamsNonStreaming
-  extends ChatCompletionCreateParamsBase {
+export interface ChatCompletionCreateParamsNonStreaming extends ChatCompletionCreateParamsBase {
   stream?: false;
 }
 
-export interface ChatCompletionCreateParamsStreaming
-  extends ChatCompletionCreateParamsBase {
+export interface ChatCompletionCreateParamsStreaming extends ChatCompletionCreateParamsBase {
   stream: true;
 }
 

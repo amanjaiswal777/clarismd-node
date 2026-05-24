@@ -18,7 +18,9 @@ async function main(): Promise<void> {
 
   console.log(`detected: ${result.detected}`);
   for (const entity of result.entities) {
-    console.log(`- ${entity.type}: "${entity.text}" [${entity.start}-${entity.end}]`);
+    console.log(
+      `- ${entity.type}: "${entity.text}" [${entity.start}-${entity.end}]`,
+    );
   }
 }
 

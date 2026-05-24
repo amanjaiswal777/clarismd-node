@@ -55,10 +55,7 @@ export class KeysResource extends Resource {
     return unwrapKey(raw);
   }
 
-  async get(
-    keyId: string,
-    options?: ResourceRequestOptions,
-  ): Promise<APIKey> {
+  async get(keyId: string, options?: ResourceRequestOptions): Promise<APIKey> {
     const raw = await this.client.request<unknown>({
       method: "GET",
       path: `/keys/${encodeURIComponent(keyId)}`,
@@ -67,10 +64,7 @@ export class KeysResource extends Resource {
     return unwrapKey(raw);
   }
 
-  async delete(
-    keyId: string,
-    options?: ResourceRequestOptions,
-  ): Promise<void> {
+  async delete(keyId: string, options?: ResourceRequestOptions): Promise<void> {
     await this.client.request<unknown>({
       method: "DELETE",
       path: `/keys/${encodeURIComponent(keyId)}`,

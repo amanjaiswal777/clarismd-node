@@ -31,7 +31,11 @@ function chunk(content: string, finishReason: string | null = null): string {
 describe("streaming chat completions", () => {
   it("yields chunks until [DONE]", async () => {
     const fetch: FetchLike = async () =>
-      streamingResponse([chunk("Hel"), chunk("lo", "stop"), "data: [DONE]\n\n"]);
+      streamingResponse([
+        chunk("Hel"),
+        chunk("lo", "stop"),
+        "data: [DONE]\n\n",
+      ]);
     const client = makeClient(fetch);
     const stream = await client.chat.completions.create({
       model: "gpt-4o-mini",
@@ -117,7 +121,8 @@ describe("streaming chat completions", () => {
   });
 
   it("close() is idempotent", async () => {
-    const fetch: FetchLike = async () => streamingResponse(["data: [DONE]\n\n"]);
+    const fetch: FetchLike = async () =>
+      streamingResponse(["data: [DONE]\n\n"]);
     const client = makeClient(fetch);
     const stream = await client.chat.completions.create({
       model: "gpt-4o-mini",

@@ -17,34 +17,32 @@ import {
 } from "../src/index.js";
 import { buildAPIError } from "../src/core/errors.js";
 
-const TYPE_CASES: Array<[string, number, new (...args: never[]) => APIError]> = [
-  ["authentication_error", 401, AuthenticationError],
-  ["permission_denied", 403, PermissionDeniedError],
-  ["not_found", 404, NotFoundError],
-  ["conflict", 409, ConflictError],
-  ["unprocessable_entity", 422, UnprocessableEntityError],
-  ["rate_limit_exceeded", 429, RateLimitError],
-  ["phi_policy_violation", 400, PHIPolicyViolationError],
-  ["budget_exceeded", 402, BudgetExceededError],
-  ["provider_error", 502, ProviderError],
-  ["internal_server_error", 500, InternalServerError],
-];
+const TYPE_CASES: Array<[string, number, new (...args: never[]) => APIError]> =
+  [
+    ["authentication_error", 401, AuthenticationError],
+    ["permission_denied", 403, PermissionDeniedError],
+    ["not_found", 404, NotFoundError],
+    ["conflict", 409, ConflictError],
+    ["unprocessable_entity", 422, UnprocessableEntityError],
+    ["rate_limit_exceeded", 429, RateLimitError],
+    ["phi_policy_violation", 400, PHIPolicyViolationError],
+    ["budget_exceeded", 402, BudgetExceededError],
+    ["provider_error", 502, ProviderError],
+    ["internal_server_error", 500, InternalServerError],
+  ];
 
 describe("buildAPIError", () => {
-  it.each(TYPE_CASES)(
-    "%s → mapped subclass",
-    (errType, status, cls) => {
-      const err = buildAPIError({
-        statusCode: status,
-        requestId: "req_x",
-        body: { error: { type: errType, message: "boom", code: "c" } },
-      });
-      expect(err).toBeInstanceOf(cls);
-      expect(err.requestId).toBe("req_x");
-      expect(err.code).toBe("c");
-      expect(err.message).toBe("boom");
-    },
-  );
+  it.each(TYPE_CASES)("%s → mapped subclass", (errType, status, cls) => {
+    const err = buildAPIError({
+      statusCode: status,
+      requestId: "req_x",
+      body: { error: { type: errType, message: "boom", code: "c" } },
+    });
+    expect(err).toBeInstanceOf(cls);
+    expect(err.requestId).toBe("req_x");
+    expect(err.code).toBe("c");
+    expect(err.message).toBe("boom");
+  });
 
   it("falls back on status when error.type is missing", () => {
     const err = buildAPIError({

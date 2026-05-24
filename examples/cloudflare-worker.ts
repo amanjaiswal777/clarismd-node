@@ -22,7 +22,10 @@ interface Env {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    if (request.method !== "POST" || new URL(request.url).pathname !== "/chat") {
+    if (
+      request.method !== "POST" ||
+      new URL(request.url).pathname !== "/chat"
+    ) {
       return new Response("Not Found", { status: 404 });
     }
 

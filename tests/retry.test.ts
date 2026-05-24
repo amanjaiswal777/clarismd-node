@@ -124,7 +124,9 @@ describe("APIClient retry loop", () => {
       fetch: m.fetch,
       sleep: async () => undefined,
     });
-    await expect(client.request({ method: "GET", path: "/x" })).rejects.toThrow();
+    await expect(
+      client.request({ method: "GET", path: "/x" }),
+    ).rejects.toThrow();
     expect(m.callCount()).toBe(1);
   });
 
@@ -156,9 +158,18 @@ describe("APIClient retry loop", () => {
 
   it("surfaces RateLimitError when retries exhausted", async () => {
     const m = mockFetch([
-      { status: 429, body: { error: { type: "rate_limit_exceeded", message: "x" } } },
-      { status: 429, body: { error: { type: "rate_limit_exceeded", message: "x" } } },
-      { status: 429, body: { error: { type: "rate_limit_exceeded", message: "x" } } },
+      {
+        status: 429,
+        body: { error: { type: "rate_limit_exceeded", message: "x" } },
+      },
+      {
+        status: 429,
+        body: { error: { type: "rate_limit_exceeded", message: "x" } },
+      },
+      {
+        status: 429,
+        body: { error: { type: "rate_limit_exceeded", message: "x" } },
+      },
     ]);
     const client = new APIClient({
       apiKey: "sk-test",

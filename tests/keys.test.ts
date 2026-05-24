@@ -6,9 +6,7 @@ import { makeClient, mockFetch } from "./_helpers.js";
 
 describe("keys resource", () => {
   it("list returns key metadata array", async () => {
-    const m = mockFetch([
-      { body: { data: [{ id: "k_1", name: "primary" }] } },
-    ]);
+    const m = mockFetch([{ body: { data: [{ id: "k_1", name: "primary" }] } }]);
     const client = makeClient(m.fetch);
     const keys = await client.keys.list();
     expect(keys).toHaveLength(1);

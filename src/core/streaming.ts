@@ -110,7 +110,9 @@ export class Stream<T> implements AsyncIterable<T> {
         let separatorIndex: number;
         while ((separatorIndex = findEventBoundary(buffer)) !== -1) {
           const rawEvent = buffer.slice(0, separatorIndex);
-          buffer = buffer.slice(separatorIndex + boundaryLength(buffer, separatorIndex));
+          buffer = buffer.slice(
+            separatorIndex + boundaryLength(buffer, separatorIndex),
+          );
           const parsed = this.parseEvent(rawEvent);
           if (parsed === undefined) continue;
           if (parsed === DONE) return;
@@ -164,9 +166,7 @@ export class Stream<T> implements AsyncIterable<T> {
       parsed = JSON.parse(dataStr);
     } catch {
       // Malformed frame — treat as transport error.
-      throw new ClarisMDError(
-        `Malformed SSE event: ${dataStr.slice(0, 200)}`,
-      );
+      throw new ClarisMDError(`Malformed SSE event: ${dataStr.slice(0, 200)}`);
     }
 
     if (isPlainObject(parsed) && isPlainObject(parsed["error"])) {

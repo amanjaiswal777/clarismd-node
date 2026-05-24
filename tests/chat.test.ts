@@ -84,7 +84,9 @@ describe("chat.completions.create", () => {
 
   it("honors a custom baseURL", async () => {
     const m = mockFetch([{ body: COMPLETION_BODY }]);
-    const client = makeClient(m.fetch, { baseURL: "https://gateway.example.org/api" });
+    const client = makeClient(m.fetch, {
+      baseURL: "https://gateway.example.org/api",
+    });
     await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: "x" }],
@@ -136,7 +138,9 @@ describe("chat.completions.create", () => {
   });
 
   it("returns the typed error class even when only the status fallback applies", async () => {
-    const m = mockFetch([{ status: 404, body: { error: { message: "gone" } } }]);
+    const m = mockFetch([
+      { status: 404, body: { error: { message: "gone" } } },
+    ]);
     const client = makeClient(m.fetch, { maxRetries: 0 });
     await expect(
       client.chat.completions.create({
