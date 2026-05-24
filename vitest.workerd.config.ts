@@ -7,7 +7,7 @@
 //
 // The pool itself (@cloudflare/vitest-pool-workers) is not pinned in
 // devDependencies — CI installs it separately so a missing local install
-// doesn't block local development. See .github/workflows/typescript-sdk-ci.yml.
+// doesn't block local development. See .github/workflows/ci.yml.
 
 import { defineConfig } from "vitest/config";
 
