@@ -20,6 +20,7 @@ export type { PHIScanOptions } from "./resources/phi.js";
 export { AuditResource } from "./resources/audit.js";
 export { ComplianceResource } from "./resources/compliance.js";
 export { KeysResource } from "./resources/keys.js";
+export { HealthResource } from "./resources/health.js";
 export type { ResourceRequestOptions } from "./resources/_base.js";
 
 // Streaming primitives.

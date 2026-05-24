@@ -14,6 +14,7 @@ import { ChatResource } from "./resources/chat.js";
 import { CompletionsResource } from "./resources/completions.js";
 import { ComplianceResource } from "./resources/compliance.js";
 import { EmbeddingsResource } from "./resources/embeddings.js";
+import { HealthResource } from "./resources/health.js";
 import { KeysResource } from "./resources/keys.js";
 import { ModerationsResource } from "./resources/moderations.js";
 import { PHIResource } from "./resources/phi.js";
@@ -47,8 +48,9 @@ export interface ClarisMDOptions {
 
 function readEnv(name: string): string | undefined {
   // `process` may not exist in browsers / Workers / Deno without env perm.
-  const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } })
-    .process;
+  const proc = (
+    globalThis as { process?: { env?: Record<string, string | undefined> } }
+  ).process;
   if (!proc?.env) return undefined;
   const value = proc.env[name];
   return typeof value === "string" && value.length > 0 ? value : undefined;
@@ -69,6 +71,7 @@ export class ClarisMD {
   readonly audit: AuditResource;
   readonly compliance: ComplianceResource;
   readonly keys: KeysResource;
+  readonly health: HealthResource;
 
   /** Underlying transport — exposed for advanced consumers. */
   readonly apiClient: APIClient;
@@ -100,5 +103,6 @@ export class ClarisMD {
     this.audit = new AuditResource(this.apiClient);
     this.compliance = new ComplianceResource(this.apiClient);
     this.keys = new KeysResource(this.apiClient);
+    this.health = new HealthResource(this.apiClient);
   }
 }
