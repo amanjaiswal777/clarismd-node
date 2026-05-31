@@ -2,9 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Basic chat completion. Run with:
+ * Basic chat completion. Issue a ClarisMD API key in the dashboard
+ * (Settings → API keys) — they are prefixed ``oai_live_`` — then run:
  *
- *   CLARISMD_API_KEY=sk-... npx tsx examples/quickstart.ts
+ *   CLARISMD_API_KEY=oai_live_... npx tsx examples/quickstart.ts
+ *
+ * The example uses ``gpt-4o-mini`` so your account needs an OpenAI
+ * credential attached at /settings → Integrations. To route to AWS Bedrock
+ * or Google instead, change ``model`` to e.g.
+ * ``anthropic.claude-3-5-sonnet-20240620-v1:0`` or ``gemini-1.5-flash``
+ * and connect the matching provider.
  */
 
 import { ClarisMD } from "../src/index.js";
