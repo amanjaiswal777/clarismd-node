@@ -3,9 +3,9 @@
 
 /**
  * Basic chat completion. Issue a ClarisMD API key in the dashboard
- * (Settings → API keys) — they are prefixed ``oai_live_`` — then run:
+ * (Settings → API keys) — they are prefixed ``clr_live_`` — then run:
  *
- *   CLARISMD_API_KEY=oai_live_... npx tsx examples/quickstart.ts
+ *   CLARISMD_API_KEY=clr_live_... npx tsx examples/quickstart.ts
  *
  * The example uses ``gpt-4o-mini`` so your account needs an OpenAI
  * credential attached at /settings → Integrations. To route to AWS Bedrock

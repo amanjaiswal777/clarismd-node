@@ -4,7 +4,7 @@
 /**
  * Streaming chat completion. Run with:
  *
- *   CLARISMD_API_KEY=oai_live_... npx tsx examples/streaming.ts
+ *   CLARISMD_API_KEY=clr_live_... npx tsx examples/streaming.ts
  */
 
 import { ClarisMD } from "../src/index.js";
