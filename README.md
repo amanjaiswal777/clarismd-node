@@ -157,7 +157,7 @@ const page = await client.audit.list({
 });
 
 const blob = await client.audit.export({ format: "json" });
-// In Node: await Bun.write("audit.json", blob); or fs.writeFileSync(...)
+// Node: fs.writeFileSync("audit.json", Buffer.from(await blob.arrayBuffer()));
 ```
 
 ## Compliance dashboard
@@ -258,14 +258,31 @@ Runnable scripts live in [`examples/`](./examples):
 
 ## Contributing
 
-Issues and PRs welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for
-the dev setup and PR conventions, and [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
-for community expectations.
+Issues and PRs welcome. Contributions are licensed Apache-2.0 (inbound = outbound, no CLA);
+sign off every commit with `git commit -s` ([DCO](https://developercertificate.org/)).
+Before opening a PR, run the gates CI enforces: `npm run lint`, `npm run typecheck`,
+`npx prettier --check src tests examples`, `npm test`, `npm run build && npm run size`
+(15 KB gzip ceiling), and `npm run test:workers` (after `npm i --no-save @cloudflare/vitest-pool-workers`).
+Keep the SDK zero-dependency and native-`fetch`-only, mirror `clarismd-python` naming
+(`clarismdPolicy` ↔ `clarismd_policy`), and note user-visible changes in `CHANGELOG.md`
+under `[Unreleased]`. Conduct concerns (Contributor Covenant 2.1): conduct@clarismd.com.
+
+## Releasing (maintainers)
+
+1. `npm version <patch|minor|major> --no-git-tag-version`, move the `[Unreleased]` entries in
+   `CHANGELOG.md` under `## [X.Y.Z] — YYYY-MM-DD`, and merge to `main`.
+2. `git tag -a vX.Y.Z -m "Release vX.Y.Z" && git push origin vX.Y.Z`. The tag must match `package.json`.
+3. Approve the `release` environment in Actions. [`publish.yml`](https://github.com/amanjaiswal777/clarismd-node/blob/main/.github/workflows/publish.yml) reruns
+   lint/typecheck/test/build/size, then runs `npm publish --provenance` using the `NPM_TOKEN` secret.
+4. Confirm with `npm view @clarismd/sdk version`, then create the GitHub Release from the changelog entry.
+5. To pull a bad release, run `npm deprecate @clarismd/sdk@X.Y.Z "<reason>"` and ship a patch
+   (`npm unpublish` is restricted after 72 h).
 
 ## Security
 
-Found a vulnerability? Please report it privately per
-[`SECURITY.md`](./SECURITY.md) — do not open a public issue.
+Found a vulnerability? Email **security@clarismd.com** privately — do not
+open a public issue or PR. We acknowledge reports within 2 business days
+and follow a 90-day coordinated disclosure window from the initial report.
 
 ## License
 

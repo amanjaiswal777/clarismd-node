@@ -5,7 +5,7 @@
  * Public response and request types returned by the ClarisMD SDK.
  *
  * These mirror the response shapes in
- * `LAUNCH_PLAN/17-v1-api-contract.md` and the Python SDK's `_types.py`.
+ * the gateway's v1 API and the Python SDK's `_types.py`.
  * Each interface is extra-fields-tolerant via a `[key: string]: unknown`
  * indexer so additive backend changes don't break SDK consumers pinned
  * to an older version. Once OpenAPI codegen lands these will be replaced

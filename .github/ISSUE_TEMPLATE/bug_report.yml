@@ -10,7 +10,8 @@ body:
         from logs, error messages, and code snippets before pasting them.
         Use synthetic data for repros (e.g., `John Doe`, `MRN 0000`).
 
-        For security vulnerabilities, follow [SECURITY.md](../SECURITY.md)
+        For security vulnerabilities, email security@clarismd.com per the
+        [security policy](https://github.com/amanjaiswal777/clarismd-node#security)
         instead — do not open a public issue.
 
   - type: input

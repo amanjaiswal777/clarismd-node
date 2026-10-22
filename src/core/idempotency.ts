@@ -3,7 +3,7 @@
 
 /**
  * Generate a fresh `Idempotency-Key` for the next POST. Keys are
- * 24-hour-scoped on the server side (per `17-v1-api-contract.md`), so a
+ * 24-hour-scoped on the server side, so a
  * UUID is overkill cryptographically but trivial to produce on every
  * runtime we target.
  *

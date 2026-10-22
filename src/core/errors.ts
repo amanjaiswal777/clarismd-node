@@ -5,7 +5,7 @@
  * Exception hierarchy for the ClarisMD TypeScript SDK.
  *
  * Mirrors the closed-set `error.type` values defined in the v1 API
- * contract (see `LAUNCH_PLAN/17-v1-api-contract.md`). The mapping is
+ * contract. The mapping is
  * intentionally one-to-one so callers can do
  * `if (err instanceof RateLimitError)` without inspecting status codes.
  */
