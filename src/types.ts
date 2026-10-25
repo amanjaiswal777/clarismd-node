@@ -17,10 +17,7 @@ export type Role = "system" | "user" | "assistant" | "tool";
 export type PHIAction = "block" | "redact" | "tokenize" | "alert";
 
 export type AcknowledgmentStatus =
-  | "pending"
-  | "acknowledged"
-  | "not_applicable"
-  | "auto_satisfied";
+  "pending" | "acknowledged" | "not_applicable" | "auto_satisfied";
 
 // ---------------------------------------------------------------------------
 // Chat & completions
@@ -304,8 +301,7 @@ export interface ChatCompletionCreateParamsStreaming extends ChatCompletionCreat
 }
 
 export type ChatCompletionCreateParams =
-  | ChatCompletionCreateParamsNonStreaming
-  | ChatCompletionCreateParamsStreaming;
+  ChatCompletionCreateParamsNonStreaming | ChatCompletionCreateParamsStreaming;
 
 export interface CompletionCreateParams {
   model: string;
