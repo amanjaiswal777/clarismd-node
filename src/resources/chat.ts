@@ -11,20 +11,20 @@ import type {
   ChatCompletionCreateParamsStreaming,
 } from "../types.js";
 import { Resource, compact, toRequestOptions } from "./_base.js";
-import type { ResourceRequestOptions } from "./_base.js";
+import type { GovernedRequestOptions } from "./_base.js";
 
 export class ChatCompletionsResource extends Resource {
   create(
     params: ChatCompletionCreateParamsNonStreaming,
-    options?: ResourceRequestOptions,
+    options?: GovernedRequestOptions,
   ): Promise<ChatCompletion>;
   create(
     params: ChatCompletionCreateParamsStreaming,
-    options?: ResourceRequestOptions,
+    options?: GovernedRequestOptions,
   ): Promise<Stream<ChatCompletionChunk>>;
   async create(
     params: ChatCompletionCreateParams,
-    options?: ResourceRequestOptions,
+    options?: GovernedRequestOptions,
   ): Promise<ChatCompletion | Stream<ChatCompletionChunk>> {
     const body = compact({ ...params });
     const reqOpts = toRequestOptions(options);

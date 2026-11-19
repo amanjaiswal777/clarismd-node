@@ -17,10 +17,6 @@ export interface ResourceRequestOptions {
   signal?: AbortSignal;
   /** Extra headers merged on top of the request envelope. */
   headers?: Record<string, string>;
-  /** `X-ClarisMD-Policy` header for this request. */
-  clarismdPolicy?: string;
-  /** `X-ClarisMD-PHI-Action` header for this request. */
-  clarismdPhiAction?: "block" | "redact" | "tokenize" | "alert";
   /**
    * Idempotency key control:
    *   - `string` — sent verbatim
@@ -30,8 +26,39 @@ export interface ResourceRequestOptions {
   idempotencyKey?: string | false;
 }
 
+/**
+ * Options for the governed model calls: `chat.completions.create` and
+ * `completions.create`. The gateway applies these per request; other
+ * endpoints do not accept them.
+ *
+ * Both are **tighten-only**: they can make the gateway stricter than your
+ * organisation's settings for this call, never looser. An invalid value is
+ * rejected with a 422 (`UnprocessableEntityError`) rather than ignored.
+ */
+export interface GovernedRequestOptions extends ResourceRequestOptions {
+  /**
+   * `X-ClarisMD-Policy`: the id of one of your own active security policies.
+   * Its action is applied to the threat types it covers, on top of your
+   * settings (it can add masking or blocking, not remove them). Another
+   * user's, an inactive or an unknown policy id is a 422.
+   */
+  clarismdPolicy?: string;
+  /**
+   * `X-ClarisMD-PHI-Action`: how to treat PHI in this request, if stricter
+   * than your settings. Strictness: `block` > `redact` (= `tokenize`) > `alert`.
+   *   - `block`    — PHI in the input refuses the request before the provider
+   *                  is called (`PHIPolicyViolationError`).
+   *   - `redact` / `tokenize` — PHI is tokenized for the provider and restored
+   *                  in the response, even if your settings only log it.
+   *   - `alert`    — never loosens: if your settings redact, PHI is redacted.
+   * The response header `X-ClarisMD-PHI-Action-Applied` reports what actually
+   * happened (`redact`, `alert`, or `none` when no PHI was found).
+   */
+  clarismdPhiAction?: "block" | "redact" | "tokenize" | "alert";
+}
+
 export function toRequestOptions(
-  opts: ResourceRequestOptions | undefined,
+  opts: GovernedRequestOptions | undefined,
 ): RequestOptions {
   if (!opts) return {};
   const out: RequestOptions = {};

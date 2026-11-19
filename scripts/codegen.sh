@@ -5,14 +5,18 @@
 # Regenerate src/types.generated.ts from the v1 OpenAPI spec.
 #
 # Usage:
-#   bash scripts/codegen.sh                                # default spec
-#   bash scripts/codegen.sh ../packages/openapi/v1.yaml    # override path
+#   bash scripts/codegen.sh                                                  # default spec
+#   bash scripts/codegen.sh ../clarismd-backend/packages/openapi/v1.yaml     # override path
+#
+# The spec is generated in the sibling clarismd-backend repo
+# (scripts/export_openapi.py). The default assumes both repos are checked
+# out side by side, as in the ClarisMD workspace.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-DEFAULT_SPEC="$ROOT_DIR/../packages/openapi/v1.yaml"
+DEFAULT_SPEC="$ROOT_DIR/../clarismd-backend/packages/openapi/v1.yaml"
 
 SPEC="${1:-$DEFAULT_SPEC}"
 OUT="$ROOT_DIR/src/types.generated.ts"
