@@ -23,7 +23,8 @@ embeddings, exposed through a single client.
   browsers, Cloudflare Workers, Deno, and Bun.
 - **Zero runtime dependencies.** ≤ 15 kB gzipped.
 - **Strict TypeScript.** Hand-written types ship today; OpenAPI codegen
-  drops in once `packages/openapi/v1.yaml` stabilizes.
+  drops in once `clarismd-backend/packages/openapi/v1.yaml` stabilizes
+  (`npm run codegen` reads it from a sibling `clarismd-backend` checkout).
 
 > ClarisMD is healthcare infrastructure. The SDK does not transmit PHI
 > on its own — it is the caller's responsibility to set the gateway
@@ -57,8 +58,8 @@ In a `package.json`:
 ```jsonc
 {
   "dependencies": {
-    "@clarismd/sdk": "github:amanjaiswal777/clarismd-node#v0.1.0"
-  }
+    "@clarismd/sdk": "github:amanjaiswal777/clarismd-node#v0.1.0",
+  },
 }
 ```
 
@@ -140,10 +141,15 @@ generation.
 ## PHI scan
 
 ```ts
-const result = await client.phi.scan(
+const { results } = await client.phi.scan(
   "Patient John Doe, DOB 1970-01-01, called about test results.",
 );
-console.log(result.detected, result.entities);
+// One result per input string (pass an array to scan a batch).
+const [result] = results;
+console.log(result.entities.length > 0, result.should_block);
+for (const e of result.entities) {
+  console.log(e.subtype ?? e.type, e.location.start, e.location.end);
+}
 ```
 
 ## Audit logs
@@ -154,11 +160,54 @@ const page = await client.audit.list({
   endDate: new Date("2026-05-01"),
   phiDetected: true,
   limit: 100,
+  offset: 0,
 });
+console.log(page.total, page.has_more, page.logs[0]?.entry_hash);
 
-const blob = await client.audit.export({ format: "json" });
-// Node: fs.writeFileSync("audit.json", Buffer.from(await blob.arrayBuffer()));
+const exported = await client.audit.export({ format: "json" }); // or "pdf"
+// Node: fs.writeFileSync("audit.json", JSON.stringify(exported));
 ```
+
+Each log carries its position in your organisation's stored hash chain
+(`chain_seq`, `prev_hash`, `entry_hash`).
+
+### Verifying evidence
+
+Audit exports (and evidence packages) are signed with **Ed25519**
+(`signature: "ed25519:<key_id>:<base64>"`). Anyone can verify them with the
+public key, without a ClarisMD account and without trusting the server:
+
+```bash
+python clarismd-backend/scripts/verify_evidence.py audit.json \
+  --keys-url https://api.clarismd.com/api/v1/evidence/signing-keys
+```
+
+The verifier checks the signature and re-hashes every chained log entry. Pin
+the key's `kid` out of band; a key fetched from the server being audited only
+proves consistency.
+
+## Agent gate
+
+Pass the id of an agent you registered (`POST /api/v1/agents`) in `metadata`
+and the gateway runs that agent's gate check **before** the model is called:
+
+```ts
+await client.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [{ role: "user", content: prompt }],
+  metadata: {
+    agent_id: "0b6f6a3e-5a1d-4c55-9a7e-6f0f3f1c2d4b",
+    workflow_name: "prior-auth",
+  },
+});
+```
+
+A suspended agent, a data classification outside its allowlist, or a trust
+score below the threshold (70 when the input contains PHI, 50 otherwise)
+raises `PermissionDeniedError` (`code: "agent_gate_denied"`) and nothing is
+sent to the provider. An `agent_id` that is not one of your agents raises
+`UnprocessableEntityError` (`code: "invalid_agent"`). This gates the model call
+made on the agent's behalf; it is not tool-call authorization.
 
 ## Compliance dashboard
 
@@ -221,13 +270,22 @@ await client.chat.completions.create(
 
 ## ClarisMD-specific options
 
-Per-request:
+Per-request (`clarismdPolicy` and `clarismdPhiAction` on `chat.completions.create`
+and `completions.create` only):
 
-| Option | Header | Purpose |
-|---|---|---|
-| `clarismdPolicy` | `X-ClarisMD-Policy` | Override the gateway policy for this call |
-| `clarismdPhiAction` | `X-ClarisMD-PHI-Action` | One of `block`, `redact`, `tokenize`, `alert` |
-| `idempotencyKey` | `Idempotency-Key` | Pass `false` to disable; pass a string to set verbatim |
+| Option              | Header                  | Purpose                                                                                                     |
+| ------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `clarismdPolicy`    | `X-ClarisMD-Policy`     | Id of one of your own active security policies; its rules are applied on top of your settings for this call |
+| `clarismdPhiAction` | `X-ClarisMD-PHI-Action` | `block`, `redact` (alias `tokenize`) or `alert`                                                             |
+| `idempotencyKey`    | `Idempotency-Key`       | Pass `false` to disable; pass a string to set verbatim                                                      |
+
+Both governance options are **tighten-only**: they can make this call stricter
+than your organisation's settings, never looser (`alert` on a tenant that
+redacts still redacts). `block` refuses a request containing PHI before the
+provider is called (`PHIPolicyViolationError`). An unknown value, or a policy id
+that is not your own active policy, is rejected with `UnprocessableEntityError`.
+The response header `X-ClarisMD-PHI-Action-Applied` reports what the gateway
+actually did with PHI: `redact`, `alert`, or `none`.
 
 POSTs auto-generate `Idempotency-Key: cmd-ts-${uuid}` unless explicitly
 disabled.

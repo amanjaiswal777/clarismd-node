@@ -21,7 +21,10 @@ export { AuditResource } from "./resources/audit.js";
 export { ComplianceResource } from "./resources/compliance.js";
 export { KeysResource } from "./resources/keys.js";
 export { HealthResource } from "./resources/health.js";
-export type { ResourceRequestOptions } from "./resources/_base.js";
+export type {
+  GovernedRequestOptions,
+  ResourceRequestOptions,
+} from "./resources/_base.js";
 
 // Streaming primitives.
 export { Stream } from "./core/streaming.js";
@@ -48,6 +51,7 @@ export {
 export type {
   AcknowledgmentStatus,
   APIKey,
+  AuditExport,
   AuditExportParams,
   AuditListParams,
   AuditLog,
@@ -80,6 +84,7 @@ export type {
   PHIAction,
   PHIEntity,
   PHIScanParams,
+  PHIScanResponse,
   PHIScanResult,
   Requirement,
   Role,

@@ -6,7 +6,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `clarismdPolicy` / `clarismdPhiAction` are now honored by the gateway (they
+  were sent but ignored). Both are tighten-only; invalid values are rejected
+  with a 422. See "ClarisMD-specific options" in the README.
+- **Breaking (types):** the two options moved from `ResourceRequestOptions` to
+  the new `GovernedRequestOptions`, accepted by `chat.completions.create` and
+  `completions.create` only. Other endpoints never applied them.
+- **Breaking:** `keys`, `phi.scan` and `audit` now match what the gateway
+  actually returns (the previous types described shapes it never sent, so
+  e.g. `keys.create().secret` and `phi.scan().entities` were always empty):
+  - `keys.create({ name?, permissions?, expiresInDays? })`; the one-time
+    secret is in `key`. `APIKey` fields are `key_prefix`, `permissions`,
+    `revoked`, `last_used`, `expires_at` (were `prefix`, `scopes`,
+    `revoked_at`, `last_used_at`, `secret`).
+  - `phi.scan()` returns `PHIScanResponse` — `{ results: PHIScanResult[] }`,
+    one per input — with entities `{ type, subtype, severity, confidence,
+location: { start, end }, matched_text }`. Options are `scanTypes` /
+    `useMl`; `returnEntities` is removed (the gateway ignored it).
+  - `audit.list()` uses `offset` paging (the gateway ignored `cursor`) and
+    returns `{ logs, total, limit, offset, has_more }`; new `action` and
+    `resourceType` filters. `AuditLog` matches the gateway's entry shape,
+    including the hash-chain fields `chain_seq`, `prev_hash`, `entry_hash`.
+  - `audit.export()` returns the typed, Ed25519-signed `AuditExport` instead
+    of a `Blob`; `format` is `"json" | "pdf"` (`csv` / `ndjson` were always
+    rejected with a 422). New `requestId` / `phiDetected` filters.
+- A plain string `user` on chat/completions is now accepted by the gateway
+  (it was rejected with a 422).
+- `npm run codegen` reads the spec from `../clarismd-backend/packages/openapi/v1.yaml`
+  (the old default path did not exist).
+
+### Documented
+
+- Agent gate: `metadata.agent_id` on chat/completions runs the agent's gate
+  check before the provider call.
+- Verifying signed evidence offline.
+
 ### Added
+
 - `client.health.check()` — `GET /v1/health` reachability probe returning
   the typed `HealthStatus` (status string, gateway version, passthrough
   fields). Mirrors the Python SDK's `client.health.check()`.
@@ -14,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] — 2026-05-24
 
 ### Added
+
 - Initial release of the official ClarisMD TypeScript SDK.
 - Sync surface: `ClarisMD` class with `chat`, `completions`, `embeddings`,
   `moderations`, `phi`, `audit`, `compliance`, `keys` resource namespaces.

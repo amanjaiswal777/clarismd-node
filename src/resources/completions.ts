@@ -3,12 +3,12 @@
 
 import type { CompletionCreateParams, TextCompletion } from "../types.js";
 import { Resource, compact, toRequestOptions } from "./_base.js";
-import type { ResourceRequestOptions } from "./_base.js";
+import type { GovernedRequestOptions } from "./_base.js";
 
 export class CompletionsResource extends Resource {
   async create(
     params: CompletionCreateParams,
-    options?: ResourceRequestOptions,
+    options?: GovernedRequestOptions,
   ): Promise<TextCompletion> {
     const body = compact({ ...params });
     return this.client.request<TextCompletion>({

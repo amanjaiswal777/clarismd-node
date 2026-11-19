@@ -55,10 +55,15 @@ describe("chat.completions.create", () => {
     const client = makeClient(m.fetch);
     await client.chat.completions.create(
       { model: "gpt-4o-mini", messages: [{ role: "user", content: "x" }] },
-      { clarismdPolicy: "strict", clarismdPhiAction: "redact" },
+      {
+        clarismdPolicy: "0b6f6a3e-5a1d-4c55-9a7e-6f0f3f1c2d4b",
+        clarismdPhiAction: "redact",
+      },
     );
     const headers = m.requests[0]!.headers;
-    expect(headers["x-clarismd-policy"]).toBe("strict");
+    expect(headers["x-clarismd-policy"]).toBe(
+      "0b6f6a3e-5a1d-4c55-9a7e-6f0f3f1c2d4b",
+    );
     expect(headers["x-clarismd-phi-action"]).toBe("redact");
   });
 

@@ -10,19 +10,14 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function unwrapList(raw: unknown): APIKey[] {
+// The gateway returns a bare array / bare object (no `{data: ...}` envelope).
+function asList(raw: unknown): APIKey[] {
   if (Array.isArray(raw)) return raw as APIKey[];
-  if (isPlainObject(raw) && Array.isArray(raw["data"])) {
-    return raw["data"] as APIKey[];
-  }
-  return [];
+  throw new ClarisMDError("Unexpected key list response shape from gateway.");
 }
 
-function unwrapKey(raw: unknown): APIKey {
-  if (isPlainObject(raw)) {
-    if (isPlainObject(raw["data"])) return raw["data"] as APIKey;
-    return raw as APIKey;
-  }
+function asKey(raw: unknown): APIKey {
+  if (isPlainObject(raw)) return raw as APIKey;
   throw new ClarisMDError("Unexpected key response shape from gateway.");
 }
 
@@ -33,26 +28,31 @@ export class KeysResource extends Resource {
       path: "/keys",
       options: toRequestOptions(options),
     });
-    return unwrapList(raw);
+    return asList(raw);
   }
 
   /**
-   * Create an API key. The full `secret` is returned **once** — store it
-   * immediately. Subsequent `get()` calls return metadata only.
+   * Create an API key. The full secret is returned **once**, in `key` —
+   * store it immediately. Subsequent `get()` / `list()` calls return
+   * metadata only (`key_prefix`).
    */
   async create(
-    params: KeyCreateParams,
+    params: KeyCreateParams = {},
     options?: ResourceRequestOptions,
   ): Promise<APIKey> {
-    const body: Record<string, unknown> = { name: params.name };
-    if (params.scopes !== undefined) body["scopes"] = params.scopes;
+    const body: Record<string, unknown> = {};
+    if (params.name !== undefined) body["name"] = params.name;
+    if (params.permissions !== undefined)
+      body["permissions"] = params.permissions;
+    if (params.expiresInDays !== undefined)
+      body["expires_in_days"] = params.expiresInDays;
     const raw = await this.client.request<unknown>({
       method: "POST",
       path: "/keys",
       body,
       options: toRequestOptions(options),
     });
-    return unwrapKey(raw);
+    return asKey(raw);
   }
 
   async get(keyId: string, options?: ResourceRequestOptions): Promise<APIKey> {
@@ -61,7 +61,7 @@ export class KeysResource extends Resource {
       path: `/keys/${encodeURIComponent(keyId)}`,
       options: toRequestOptions(options),
     });
-    return unwrapKey(raw);
+    return asKey(raw);
   }
 
   async delete(keyId: string, options?: ResourceRequestOptions): Promise<void> {

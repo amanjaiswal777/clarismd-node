@@ -145,18 +145,33 @@ export interface ModerationResponse {
 // ---------------------------------------------------------------------------
 
 export interface PHIEntity {
+  /** Detector category, e.g. `"pii"`. */
   type: string;
-  text: string;
-  start: number;
-  end: number;
-  score?: number | null;
+  /** Finer identifier class, e.g. `"ssn"`, `"mrn"`, `"dob"`. */
+  subtype?: string | null;
+  severity: string;
+  confidence: number;
+  /** Character offsets into the scanned string. */
+  location: { start: number; end: number };
+  matched_pattern?: string | null;
+  matched_text?: string | null;
   [key: string]: unknown;
 }
 
+/** One scan result per input string, in input order. */
 export interface PHIScanResult {
-  detected: boolean;
+  scan_id: string;
+  overall_risk_score: number;
+  should_block: boolean;
+  /** Empty when no PHI/PII was found. */
   entities: PHIEntity[];
-  request_id?: string | null;
+  scan_duration_ms?: number | null;
+  [key: string]: unknown;
+}
+
+/** Response of `POST /v1/phi/scan`: one result per input, in order. */
+export interface PHIScanResponse {
+  results: PHIScanResult[];
   [key: string]: unknown;
 }
 
@@ -166,25 +181,58 @@ export interface PHIScanResult {
 
 export interface AuditLog {
   id: string;
-  request_id?: string | null;
-  user_id?: string | null;
+  action: string;
+  resource_type?: string | null;
+  resource_id?: string | null;
+  details: Record<string, unknown>;
+  ip_address?: string | null;
+  user_agent?: string | null;
+  /** ISO-8601 string. Use `new Date(log.created_at)` to parse. */
+  created_at?: string | null;
   org_id?: string | null;
-  endpoint?: string | null;
-  model?: string | null;
-  phi_detected?: boolean;
-  phi_action?: string | null;
-  cost_usd?: number | null;
-  /** ISO-8601 string. Use `new Date(log.timestamp)` to parse. */
-  timestamp?: string | null;
-  metadata?: Record<string, unknown>;
+  user_id?: string | null;
+  /**
+   * Position in the organisation's stored hash chain. `null` for entries
+   * written before the chain existed.
+   */
+  chain_seq?: number | null;
+  prev_hash?: string | null;
+  /** sha256 over the entry's canonical fields and `prev_hash`. */
+  entry_hash?: string | null;
+  /** The exact timestamp string that `entry_hash` covers. */
+  created_at_canonical?: string | null;
   [key: string]: unknown;
 }
 
+/** Offset-paginated page of audit logs. */
 export interface AuditLogPage {
-  data: AuditLog[];
-  next_cursor?: string | null;
-  has_more?: boolean;
-  request_id?: string | null;
+  logs: AuditLog[];
+  /** Total matching entries (all pages). */
+  total: number;
+  limit: number;
+  offset: number;
+  has_more: boolean;
+  [key: string]: unknown;
+}
+
+/**
+ * Signed audit export. JSON exports carry `payload`; PDF exports carry
+ * `pdf_base64`. `signature` is `ed25519:<key_id>:<base64>` and verifies
+ * offline with the public key at `public_keys_url`.
+ */
+export interface AuditExport {
+  export_id: string;
+  format: "json" | "pdf";
+  record_count: number;
+  /** ISO-8601 string. */
+  generated_at: string;
+  download_url?: string | null;
+  payload?: { logs: AuditLog[]; filters: Record<string, unknown> } | null;
+  signature?: string | null;
+  signature_alg?: string | null;
+  key_id?: string | null;
+  public_keys_url?: string | null;
+  pdf_base64?: string | null;
   [key: string]: unknown;
 }
 
@@ -243,20 +291,22 @@ export interface EvidenceArtifact {
 export interface APIKey {
   id: string;
   name?: string | null;
-  prefix?: string | null;
+  key_prefix: string;
   /**
    * Full secret token. ONLY present in the response from
    * `client.keys.create()` — it is never returned again, so callers
    * must persist it immediately.
    */
-  secret?: string | null;
-  scopes?: string[];
+  key?: string | null;
+  permissions?: string[] | null;
+  revoked: boolean;
   /** ISO-8601 string. */
-  created_at?: string | null;
+  created_at: string;
   /** ISO-8601 string. */
-  last_used_at?: string | null;
+  last_used?: string | null;
   /** ISO-8601 string. */
-  revoked_at?: string | null;
+  expires_at?: string | null;
+  created_by_session_id?: string | null;
   [key: string]: unknown;
 }
 
@@ -332,7 +382,8 @@ export interface ModerationCreateParams {
 
 export interface PHIScanParams {
   text: string | string[];
-  return_entities?: boolean;
+  scan_types?: string[];
+  use_ml?: boolean;
   [key: string]: unknown;
 }
 
@@ -341,16 +392,23 @@ export interface AuditListParams {
   startDate?: Date | string;
   /** Date object or ISO-8601 string. */
   endDate?: Date | string;
+  /** 1–500, default 50. */
   limit?: number;
-  cursor?: string;
+  /** Number of entries to skip. */
+  offset?: number;
+  action?: string;
+  resourceType?: string;
   requestId?: string;
   phiDetected?: boolean;
 }
 
 export interface AuditExportParams {
-  format: "csv" | "ndjson" | "json";
+  /** Default `"json"`. */
+  format?: "json" | "pdf";
   startDate?: Date | string;
   endDate?: Date | string;
+  requestId?: string;
+  phiDetected?: boolean;
 }
 
 export interface ComplianceScoreParams {
@@ -371,6 +429,8 @@ export interface ComplianceAcknowledgeParams {
 }
 
 export interface KeyCreateParams {
-  name: string;
-  scopes?: string[];
+  name?: string;
+  permissions?: string[];
+  /** 1–365. Omit for a non-expiring key. */
+  expiresInDays?: number;
 }

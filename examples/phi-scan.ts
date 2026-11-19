@@ -12,14 +12,15 @@ import { ClarisMD } from "../src/index.js";
 async function main(): Promise<void> {
   const client = new ClarisMD();
 
-  const result = await client.phi.scan(
+  const { results } = await client.phi.scan(
     "Patient John Doe, DOB 1970-01-01, called about test results.",
   );
+  const result = results[0]!;
 
-  console.log(`detected: ${result.detected}`);
+  console.log(`detected: ${result.entities.length > 0}`);
   for (const entity of result.entities) {
     console.log(
-      `- ${entity.type}: "${entity.text}" [${entity.start}-${entity.end}]`,
+      `- ${entity.subtype ?? entity.type}: "${entity.matched_text ?? ""}" [${entity.location.start}-${entity.location.end}]`,
     );
   }
 }
